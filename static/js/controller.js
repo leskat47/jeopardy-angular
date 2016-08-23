@@ -5,6 +5,17 @@ app.config(['$routeProvider',
          $routeProvider.
              when('/', {
                  templateUrl: '/static/partials/index.html',
+                // TODO: create a service, Auth that checks for log in
+                //  resolve: {
+                //     "check": function (Auth, $location) {
+                //         Auth.isLoggedIn(function (response) {
+                //             console.log(response);
+                //             if (response) {
+                //                 $location.path('/'); //redirect user to home.
+                //             }
+                //         });
+                //     }
+                // }
              }).
              otherwise({
                  redirectTo: '/'
