@@ -5,18 +5,18 @@ body {
 }
 @font-face {
     font-family: 'gyparody';
-    src: url('fonts/gyparody.ttf')
+    src: url('../fonts/gyparody.ttf')
     format('truetype');
 }
 
 @font-face {
     font-family: 'korinna';
-    src: url('fonts/KorinnaBold.ttf')
+    src: url('../fonts/KorinnaBold.ttf')
     format('truetype');
 }
 
 #splash {
-    background-image: url("jeopardybg.jpg");
+    background-image: url("../img/jeopardybg.jpg");
 }
 
 .start-end {

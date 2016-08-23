@@ -1,0 +1,48 @@
+
+<div class="container"> 
+    <h1 class="title">{{ title }}</h1>
+    <p><b>{{ round.name }}</b></p>
+
+    <div class="row header">
+      <category ng-repeat="(key, value) in round['categories']">
+        <div class="col-xs-2"> <div class="screen categories" >{{ key }}</div>
+        </div>
+      </category>
+    </div>
+    <div class="row questions">
+      <category ng-repeat="(cat, questionSet) in round['categories']" class="col-xs-2">
+            <question ng-repeat="(dollars, QandA) in questionSet">
+                 <div class="row">
+                    <div class="col-xs-12">
+                        <div ng-show="showOption" class="screen" ng-click='showQ(QandA, dollars); showOption = !showOption;'>
+                          <span class="dollars">${{ dollars }}</span>
+                        </div>
+                        <div ng-show="!showOption" class="screen">
+                        </div>
+                    </div>
+                 </div>
+            </question>
+      </category>
+    </div>
+    <div class="row results">
+      <div class="col-xs-3 col-xs-offset-2">
+        <div class="screen">
+          <p>
+            {{ player1.name }}<br>
+            $ {{ player1.score}}
+          </p>
+        </div>
+      </div>
+      <div class="col-xs-2">
+        <button type="button" class="finaljbtn" ng-show="FinalJeopardy" ng-click="showBetting()">Final Jeopardy</button>
+      </div>
+      <div class="col-xs-3">
+        <p class="screen">
+          {{ player2.name }} <br>
+          $ {{ player2.score}}
+        </p>
+      </div>
+    </div>
+    <!-- The actual modal template, just a bit o bootstrap -->  
+
+</div>

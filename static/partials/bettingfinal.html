@@ -1,0 +1,19 @@
+<div class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content screen dollars">
+      <div class="modal-body">
+        <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <form name="myForm">
+            <p>Player 1 Score: {{ player1.score }}</p>
+            <p>Bet:</p>
+              <input class="black" type="text" name="input" ng-model="player1bet" required ng-trim="false">
+            <p>Player 2 Score: {{ player2.score }}</p>
+            <p>Bet: </p>
+              <input class="black" type="text" name="input" ng-model="player2bet"
+                     ng-pattern="example.word" required ng-trim="false">
+           </form>
+           <button type="button" ng-click="bet(player1bet, player2bet); close()" class="btn btn-success playerbtn">Lets Play</button>
+      </div>
+    </div>
+  </div>
+</div>
