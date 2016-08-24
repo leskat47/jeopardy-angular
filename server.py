@@ -21,6 +21,7 @@ def game_names():
 @app.route("/gamedata.json/<int:id>")
 def get_game_data(id):
     print id
+    # Query database for game data
     game_data = {'name': 'Game 1',
                  'categories': {'Command Line': {
                                 '100':
