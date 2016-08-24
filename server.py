@@ -15,7 +15,7 @@ def home():
 def game_names():
     names = ["Game 1", "Game 2"]
 
-    return jsonify(games=names)
+    return jsonify(names=names)
 
 
 @app.route("/gamedata.json")
