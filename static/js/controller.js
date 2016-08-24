@@ -13,7 +13,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
   .factory('gameService', function($http){
     return {
       getGame: function(gameNumber){
-        return $http.get("/gamedata.json").then(function (response) {
+        return $http.get("/gamedata.json/" + gameNumber).then(function (response) {
             return response.data;
         });
       }
@@ -32,12 +32,12 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
                 }
               }
             }).
-             when('/play', {
+             when('/play/:id', {
               templateUrl: '/static/partials/play.html',
               controller: 'gameCtrl',
               resolve: {
-                currentGame: function(gameService){
-                  return gameService.getGame();
+                currentGame: function(gameService, $route){
+                  return gameService.getGame($route.current.params.id);
                 }
               }
             }).
@@ -63,7 +63,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
 
   .controller('homeCtrl', ['$scope', '$log', 'ModalService', 'names',
     function($scope, $log, ModalService, names) {
-    $scope.names = names;
+    $scope.names = names.names;
     $log.log(names);
     // TODO: on selection of a game, get the game data? How would this get passed to the next route and controller?
   }])

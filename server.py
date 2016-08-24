@@ -13,13 +13,14 @@ def home():
 
 @app.route("/gamenames.json")
 def game_names():
-    names = ["Game 1", "Game 2"]
+    names = {1:"Game 1", 2:"Game 2"}
 
     return jsonify(names=names)
 
 
-@app.route("/gamedata.json")
-def get_game_data():
+@app.route("/gamedata.json/<int:id>")
+def get_game_data(id):
+    print id
     game_data = {'name': 'Game 1',
                  'categories': {'Command Line': {
                                 '100':
