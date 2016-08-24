@@ -22,6 +22,7 @@ class Game(db.Model):
 
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
+    name = db.Column(db.String(20), nullable=False)
     final_question = db.Column(db.Text, nullable=False)
     final_answer = db.Column(db.Text, nullable=False)
 
@@ -49,6 +50,7 @@ class Question(db.Model):
 
     q_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'), nullable=False)
+    dollars = db.Column(db.Integer, nullable=False)
     question = db.Column(db.Text, nullable=False)
     answer = db.Column(db.Text, nullable=False)
 
@@ -68,20 +70,15 @@ def connect_to_db(app):
 def seed_data():
     user = User(email="jessica@hb.com", username="jessica", password="hb12")
     db.session.add(user)
-    db.session.commit(user)
+    db.session.commit()
 
     game_data = {'name': 'Game 1',
                  'categories': {'Command Line': {
-                                '100':
-                                {'Is another name for Command Line': 'What is Shell, GUI, Terminal or Console?'},
-                                '200':
-                                {'Its acronym is pwd.': 'What is Print Working Directory?'},
-                                '300':
-                                {'A command to see the built in manual': 'What is "man"?'},
-                                '400':
-                                {'A command to print to STDOUT': 'What is "echo"?'},
-                                '500':
-                                {'A command to seach within files': 'What is "grep"?'},
+                                '100': {'Is another name for Command Line': 'What is Shell, GUI, Terminal or Console?'},
+                                '200': {'Its acronym is pwd.': 'What is Print Working Directory?'},
+                                '300': {'A command to see the built in manual': 'What is "man"?'},
+                                '400': {'A command to print to STDOUT': 'What is "echo"?'},
+                                '500': {'A command to seach within files': 'What is "grep"?'},
                                 },
                                 'TV': {
                                     '100':
@@ -134,9 +131,25 @@ def seed_data():
                                     '500': {'Bungy jumped off the 3rd largest bungy jump distance in the world': 'Who is Ally?'},
                                     },
                                 }}
-    final_question = "Final Question"
-    final_answer = "Final Answer"
-    game = Game(owner_id=user.user_id, final_question=final_question, final_answer=final_answer)
+    final_question = "A style guide for python, its acronym is PEP"
+    final_answer = "What are Python Enhancement Proposals?"
+
+    game = Game(owner_id=user.user_id, name=game_data["name"], final_question=final_question, final_answer=final_answer)
+    db.session.add(game)
+    db.session.commit()
+    for category, questions in game_data["categories"].items():
+        new_category = Category(game_id=game.game_id, name=category)
+        db.session.add(new_category)
+        db.session.commit()
+        for cost, qa in questions.items():
+            for ques, ans in qa.items():
+                new_question = Question(category_id=new_category.category_id,
+                                        dollars=cost, question=ques, answer=ans)
+                db.session.add(new_question)
+                db.session.commit()
+
+    return
+
 
 if __name__ == "__main__":
 
