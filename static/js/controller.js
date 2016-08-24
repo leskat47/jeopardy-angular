@@ -1,29 +1,77 @@
-var app = angular.module('gameApp', ['angularModalService', 'ngRoute']);
+var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
 
-app.config(['$routeProvider',
-     function($routeProvider) {
+  .factory('nameService', function($http){
+    return {
+      getNames: function(){
+        return $http.get("gamenames.json").then(function (response) {
+            return response.data;
+        });
+      }
+    };
+  })
+
+  .factory('gameService', function($http){
+    return {
+      getGame: function(gameNumber){
+        return $http.get("/gamedata.json").then(function (response) {
+            return response.data;
+        });
+      }
+    };
+  })
+
+  .config(['$routeProvider',
+    function($routeProvider) {
          $routeProvider.
              when('/', {
-                 templateUrl: '/static/partials/index.html',
-                // TODO: create a service, Auth that checks for log in
-                //  resolve: {
-                //     "check": function (Auth, $location) {
-                //         Auth.isLoggedIn(function (response) {
-                //             console.log(response);
-                //             if (response) {
-                //                 $location.path('/'); //redirect user to home.
-                //             }
-                //         });
-                //     }
-                // }
-             }).
-             otherwise({
-                 redirectTo: '/'
-             });
-    }]);
+              templateUrl: '/static/partials/home.html',
+              controller: 'homeCtrl',
+              resolve: {
+                names: function(nameService){
+                  return nameService.getNames();
+                }
+              }
+            }).
+             when('/play', {
+              templateUrl: '/static/partials/play.html',
+              controller: 'gameCtrl',
+              resolve: {
+                currentGame: function(gameService){
+                  return gameService.getGame();
+                }
+              }
+            }).
+            otherwise({
+              redirectTo: '/'
+            });
+            // TODO: create a service, Auth that checks for log in
+            // when('/login', {
+            // templateURL: 'static/partials/login.html',
+            //  resolve: {
+            //     "check": function (Auth, $location) {
+            //         Auth.isLoggedIn(function (response) {
+            //             console.log(response);
+            //             if (response) {
+            //                 $location.path('/'); //redirect user to home.
+            //             }
+            //         });
+            //     }
+            // }
+            // })
+      }
+    ])
 
-app.controller('gameCtrl', ['$scope', '$log', 'ModalService', function($scope, $log, ModalService) {
-	$scope.$log = $log;
+  .controller('homeCtrl', ['$scope', '$log', 'ModalService', 'names',
+    function($scope, $log, ModalService, names) {
+    $scope.names = names;
+    $log.log(names);
+    // TODO: on selection of a game, get the game data? How would this get passed to the next route and controller?
+  }])
+
+  .controller('gameCtrl', ['$scope', '$log', 'ModalService', 'currentGame',
+    function($scope, $log, ModalService, currentGame) {
+    $scope.game = currentGame;
+    $scope.$log = $log;
     $scope.player1 = {'name': 'Player 1', 'score': 0, 'bet': 0};
     $scope.player2 = {'name': 'Player 2', 'score': 0, 'bet': 0};
     $scope.showOption = true;
@@ -37,85 +85,7 @@ app.controller('gameCtrl', ['$scope', '$log', 'ModalService', function($scope, $
 	$scope.showQuestion = function(QandA) {
 		$log.log(QandA);
 	};
-    $scope.round = game1;
-	// $scope.round = {
-	// 				'name':'Game 1',
-	// 				'categories': {
-	// 							'Command Line': {
-	// 											'100':
-	// 												{'Is another name for Command Line': 'What is Shell, GUI, Terminal or Console?'},
-	// 											'200':
-	// 												{'Its acronym is pwd.' : 'What is Print Working Directory?'},
- //                                                '300':
- //                                                    {'A command to see the built in manual' : 'What is "man"?'},
- //                                                '400':
- //                                                    {'A command to print to STDOUT' : 'What is "echo"?'},
- //                                                '500':
- //                                                    {'A command to seach within files' : 'What is "grep"?'},
-	// 											},
-	// 							'TV': {
-	// 											'100':
- //                                                    {'A weekly television series on NBC was the first to air completely in color in 1959': 'What is the show Bonanza?'},
- //                                                '200':
- //                                                    {'The family name of the main characters in the Cosby Show which ran from 1984-1992' : 'What is The Huxtable Family?'},
- //                                                '300':
- //                                                    {'A popular children show that debuted on PBS in 1969' : 'What is Sesame Street?'},
- //                                                '400':
- //                                                    {'The breakout star who played Stella Carlin on the third season of Orange Is the New Black' : 'Who is Ruby Rose?'},
- //                                                '500':
- //                                                    {'The last guest on the Late Show with David Letterman' : 'Who is Bill Murray?'},
-	// 											},
-	// 							'Movies' : {
-	// 											'100':
- //                                                    {'Sings the theme song for "Spectre", the new James Bond film': 'Who is Sam Smith?'},
- //                                                '200':
- //                                                    {'Charlize Theron played this bad-ass character in "Mad Max: Fury Road"' : 'Who is Furiosa?'},
- //                                                '300':
- //                                                    {'Won the Best Picture at the 2015 Academy Awards' : 'What is Birdman?'},
- //                                                '400':
- //                                                    {'Amy Schumers well-received comedy "Trainwreck" co-starred which famous NBA player' : 'Who is Lebron James?'},
- //                                                '500':
- //                                                    {'Cast as Belle in the upcoming Disney live-action "Beauty and the Beast"' : 'Who is Emma Watson?'},
-	// 											},
-								
- //                                'Python': {
- //                                                '100':
- //                                                    {'The hardest part of programming': 'What is naming variables?'},
- //                                                '200':
- //                                                    {'A one-line summary for fucntions' : 'What is Docstrings?'},
- //                                                '300':
- //                                                    {'The data structure that range() returns' : 'What is list?'},
- //                                                '400':
- //                                                    {'The list of things defined for a function to receive' : 'What are parameters?'},
- //                                                '500':
- //                                                    {'The Zen of Python poem prints out using this command' : 'What is "import this"?'},
- //                                                },
- //                                'Ada or Grace': {
- //                                                '100':
- //                                                    {'She is the first computer programmer in history': 'Who is Ada?'},
- //                                                '200':
- //                                                    {'She retired from the navy at the standard age of 60, but was repeatedly recalled until her eighties' : 'Who is Grace?'},
- //                                                '300':
- //                                                    {'Her most famous quotes, which is often attributed to others, is: "It\'s easier to ask forgiveness than it is to get permission."' : 'Who is Grace?'},
- //                                                '400':
- //                                                    {'She was described as "The most coarse and vulgar woman in England. . ."' : 'Who is Ada?'},
- //                                                '500':
- //                                                    {'When she was younger she believed she could fly, and wrote illustrated a guide called Flyology' : 'Who is Ada?'},
- //                                                },
- //                                'Staff' : {
- //                                                '100':
- //                                                    {'Used to live in a communal, falling-down 28-room mansion in baltimore': 'Who is Joel?'},
- //                                                '200':
- //                                                    {'Carried Stephen Hawking\'s wheelchair with him in it' : 'Who is Henry?'},
- //                                                '300':
- //                                                    {'Has a betta fish - and talks to it A LOT' : 'Who is Meggie?'},
- //                                                '400':
- //                                                    {'This persons great-great-great uncle was president of Mexico' : 'Who is Leslie?'},
- //                                                '500':
- //                                                    {'Bungy jumped off the 3rd largest bungy jump distance in the world' : 'Who is Ally?'},
- //                                                },
- //                                }
- //                    };
+    $scope.round = currentGame;
 
     $scope.finaljeopardy = {
         'question': 'A style guide for python, its acronym is PEP',
@@ -155,6 +125,8 @@ app.controller('gameCtrl', ['$scope', '$log', 'ModalService', function($scope, $
         $log.log($scope.player1);
         $log.log($scope.player2);
     };
+
+  // MODAL WINDOWS /////////////////////////////////////////
 
 	$scope.showQ = function(QandA, dollars) {
         $scope.questionsDone++;
@@ -251,12 +223,12 @@ app.controller('gameCtrl', ['$scope', '$log', 'ModalService', function($scope, $
         });
     };
 
-	}]);
+	}])
 
-app.controller('ModalController', function($scope, close) {
+  .controller('ModalController', function($scope, close) {
   
- $scope.close = function(result) {
-    close(result, 500); // close, but give 500ms for bootstrap to animate
- };
+   $scope.close = function(result) {
+      close(result, 500); // close, but give 500ms for bootstrap to animate
+   };
 
 });
