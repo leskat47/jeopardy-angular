@@ -16,11 +16,11 @@ class User(db.Model):
         return "<user_id: %s, username: %s>" % (self.user_id, self.username)
 
 
-class Game(object):
+class Game(db.Model):
 
     __tablename__ = "games"
 
-    game_id = db.Column(db.Integer, autoincrement=True, nullable=False)
+    game_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     final_question = db.Column(db.Text, nullable=False)
     final_answer = db.Column(db.Text, nullable=False)
@@ -29,12 +29,26 @@ class Game(object):
         return "<game: %s, owner: %s>" % (self.game_id, self.owner_id)
 
 
-class Question(object):
+class Category(db.Model):
+
+    __tablename__ = "categories"
+
+    category_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    game_id = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=False)
+    name = db.Column(db.String(30), nullable=False)
+    questions = db.relationship('Question', backref=db.backref('category', order_by=id))
+    game = db.relationship('Game', backref=db.backref('category', order_by=id))
+
+    def __repr__(self):
+        return "<Category: %s>" % (self.name)
+
+
+class Question(db.Model):
 
     __tablename__ = "questions"
 
-    q_id = db.Column(db.Integer, autoincrement=True, nullable=False)
-    game_id = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=False)
+    q_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=False)
     question = db.Column(db.Text, nullable=False)
     answer = db.Column(db.Text, nullable=False)
 
