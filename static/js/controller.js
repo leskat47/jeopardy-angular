@@ -70,28 +70,32 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
 
   .controller('gameCtrl', ['$scope', '$log', 'ModalService', 'currentGame',
     function($scope, $log, ModalService, currentGame) {
-    $scope.game = currentGame;
     $scope.$log = $log;
+
+    // Initial variables
+    $scope.title = 'Jeopardy!';
     $scope.player1 = {'name': 'Player 1', 'score': 0, 'bet': 0};
     $scope.player2 = {'name': 'Player 2', 'score': 0, 'bet': 0};
-    $scope.showOption = true;
-    $scope.questionsDone = 0;
-    $scope.FinalJeopardy = false;
-    $scope.finalRespond1 = true;
-    $scope.finalRespond2 = true;
-    $scope.winner = '';
-
-	$scope.title = 'Jeopardy!';
-	$scope.showQuestion = function(QandA) {
-		$log.log(QandA);
-	};
-    $scope.round = currentGame;
-
+    $scope.round = currentGame["categories"];
     $scope.finaljeopardy = {
-        'question': 'A style guide for python, its acronym is PEP',
-        'answer': 'What are Python Enhancement Proposals?'
+        'question': currentGame.finalQ,
+        'answer': currentGame.finalA
     };
 
+    // Control display of final jeopardy 
+    $scope.questionsDone = 0;
+    $scope.FinalJeopardy = false;
+    $scope.winner = '';
+    $scope.$watch("FinalJeopardy", function() {
+      if ($scope.FinalJeopardy === true) {
+        $scope.showBetting();
+      }
+    });
+
+    // Control display of dollar screens
+    $scope.showOption = true;
+
+    // Splash screen on page load
     $scope.init = function(){
         ModalService.showModal({
             templateUrl: 'static/partials/splash.html',
@@ -126,6 +130,8 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
         $log.log($scope.player2);
     };
 
+
+
   // MODAL WINDOWS /////////////////////////////////////////
 
 	$scope.showQ = function(QandA, dollars) {
@@ -139,8 +145,10 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
             $scope.currentQ = Object.keys(QandA)[0];
             $scope.currentA = QandA[$scope.currentQ];
             $scope.dollars = dollars;
+            // Disable buttons after selected
             $scope.wrong1 = false;
             $scope.wrong2 = false;
+
             modal.close.then(function(player) {
                 player.score += Number(dollars);
                 $scope.showA();

@@ -3,13 +3,13 @@
     <p><b>{{ round.name }}</b></p>
 
     <div class="row header">
-      <category ng-repeat="(key, value) in round['categories']">
+      <category ng-repeat="(key, value) in round">
         <div class="col-xs-2"> <div class="screen categories" >{{ key }}</div>
         </div>
       </category>
     </div>
     <div class="row questions">
-      <category ng-repeat="(cat, questionSet) in round['categories']" class="col-xs-2">
+      <category ng-repeat="(cat, questionSet) in round" class="col-xs-2">
             <question ng-repeat="(dollars, QandA) in questionSet">
                  <div class="row">
                     <div class="col-xs-12">
