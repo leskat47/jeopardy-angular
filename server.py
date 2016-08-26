@@ -32,6 +32,8 @@ def get_game_data(id):
 
     # Build dictionary for json
     game_data["name"] = game.name
+    game_data["finalQ"] = game.final_question
+    game_data["finalA"] = game.final_answer
     game_data["categories"] = {}
     for category in categories:
         game_data["categories"][category.name] = {}
