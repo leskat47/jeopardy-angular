@@ -20,6 +20,21 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
     };
   })
 
+  .service('login', function($http) {
+    this.logIn = function(name, pw){
+        // server request will go here, return not in db, pw wrong, or logged in
+        return "Logged In";
+    };
+  })
+
+  .service('loginStatus', function($http) {
+    this.checkLogin = function(){
+        // server request to see if user is in session
+        // should this be a cookie??
+        return true;
+    };
+  })
+
   .config(['$routeProvider',
     function($routeProvider) {
          $routeProvider.
@@ -41,23 +56,25 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
                 }
               }
             }).
+            // TODO: create a service, Auth that checks for log in
+            // FIXME: no errors but html not showing
+            when('/login', {
+              templateURL: 'static/partials/login.html',
+              resolve: {
+                "check": ["loginStatus", function (loginStatus, $location) {
+                    loginStatus.checkLogin(function (response) {
+                        console.log(response);
+                        if (response) {
+                          alert("You are already logged in.");
+                          $location.path('/'); //redirect user to home.
+                        }
+                    });
+                }]
+              }
+            }).
             otherwise({
               redirectTo: '/'
             });
-            // TODO: create a service, Auth that checks for log in
-            // when('/login', {
-            // templateURL: 'static/partials/login.html',
-            //  resolve: {
-            //     "check": function (Auth, $location) {
-            //         Auth.isLoggedIn(function (response) {
-            //             console.log(response);
-            //             if (response) {
-            //                 $location.path('/'); //redirect user to home.
-            //             }
-            //         });
-            //     }
-            // }
-            // })
       }
     ])
 
