@@ -13,7 +13,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
   .factory('gameService', function($http){
     return {
       getGame: function(gameNumber){
-        return $http.get("/gamedata.json/" + gameNumber).then(function (response) {
+        return $http.get("gamedata.json" + gameNumber).then(function (response) {
             return response.data;
         });
       }
@@ -29,6 +29,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
 
   .service('loginStatus', function($http) {
     this.checkLogin = function(){
+        alert("YES");
         // server request to see if user is in session
         // should this be a cookie??
         return true;
@@ -59,11 +60,10 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
             // TODO: create a service, Auth that checks for log in
             // FIXME: no errors but html not showing
             when('/login', {
-              templateURL: 'static/partials/login.html',
+              templateUrl: '/static/partials/login.html',
               resolve: {
-                "check": ["loginStatus", function (loginStatus, $location) {
+                check: ["loginStatus", function (loginStatus, $location) {
                     loginStatus.checkLogin(function (response) {
-                        console.log(response);
                         if (response) {
                           alert("You are already logged in.");
                           $location.path('/'); //redirect user to home.
@@ -78,11 +78,10 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
       }
     ])
 
-  .controller('homeCtrl', ['$scope', '$log', 'ModalService', 'names',
-    function($scope, $log, ModalService, names) {
+  .controller('homeCtrl', ['$scope', '$log', 'names',
+    function($scope, $log, names) {
     $scope.names = names.names;
     $log.log(names);
-    // TODO: on selection of a game, get the game data? How would this get passed to the next route and controller?
   }])
 
   .controller('gameCtrl', ['$scope', '$log', 'ModalService', 'currentGame',
