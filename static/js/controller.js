@@ -13,8 +13,8 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
   .factory('gameService', function($http){
     return {
       getGame: function(gameNumber){
-        return $http.get("gamedata.json" + gameNumber).then(function (response) {
-            return response.data;
+        return $http.get("/gamedata.json/" + gameNumber).then(function (response) {
+          return response.data;
         });
       }
     };
@@ -22,14 +22,15 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
 
   .service('login', function($http) {
     this.logIn = function(name, pw){
-        // server request will go here, return not in db, pw wrong, or logged in
-        return "Logged In";
+        // TODO: create a service that checks for log in
+        return $http.post("login", {"name": name, "password": pw}).then(function(response){
+          return response.data;          
+        })
     };
   })
 
   .service('loginStatus', function($http) {
     this.checkLogin = function(){
-        alert("YES");
         // server request to see if user is in session
         // should this be a cookie??
         return true;
@@ -57,31 +58,53 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
                 }
               }
             }).
-            // TODO: create a service, Auth that checks for log in
-            // FIXME: no errors but html not showing
-            when('/login', {
-              templateUrl: '/static/partials/login.html',
-              resolve: {
-                check: ["loginStatus", function (loginStatus, $location) {
-                    loginStatus.checkLogin(function (response) {
-                        if (response) {
-                          alert("You are already logged in.");
-                          $location.path('/'); //redirect user to home.
-                        }
-                    });
-                }]
-              }
-            }).
+            // Let's use a modal instead
+            // when('/login', {
+            //   templateUrl: '/static/partials/login.html',
+            //   controller: 'loginCtrl',
+            //   resolve: {
+            //     check: ["loginStatus", '$location', function (loginStatus, $location) {
+            //         status = loginStatus.checkLogin();
+            //             if (status) {
+            //               alert("You are already logged in.");
+            //               $location.path('/'); //redirect user to home.
+            //             }
+            //     }]
+            //   }
+            // }).
             otherwise({
               redirectTo: '/'
             });
       }
     ])
 
-  .controller('homeCtrl', ['$scope', '$log', 'names',
-    function($scope, $log, names) {
+  .controller('homeCtrl', ['$scope', '$log', 'ModalService', 'names', 'login',
+    function($scope, $log, ModalService, names, login) {
     $scope.names = names.names;
     $log.log(names);
+
+    $scope.getAuth = function(){
+      // show login modal
+      ModalService.showModal({
+            templateUrl: 'static/partials/loginform.html',
+            controller: "ModalController",
+            scope: $scope,
+        }).then(function(modal) {
+            modal.element.modal();
+            // get user login info and authenticate using login service
+            // $scope.auth = function(){
+            //   response = login.login(user, pw);
+            //   if (login.login(user, pw)) {
+            //     modal.close.then(function() {
+            //     });
+            //   }
+            //   else { 
+            //     alert("Your username or password were incorrect. Try again.");
+            //   }
+            // }
+        });
+    }
+
   }])
 
   .controller('gameCtrl', ['$scope', '$log', 'ModalService', 'currentGame',
