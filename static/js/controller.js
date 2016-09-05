@@ -23,9 +23,10 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
   .service('login', function($http) {
     this.logIn = function(name, pw){
         // TODO: create a service that checks for log in
-        return $http.post("login", {"name": name, "password": pw}).then(function(response){
-          return response.data;          
-        })
+        // return $http.post("login", {"name": name, "password": pw}).then(function(response){
+        //   return response.data;          
+        // })
+        return false;
     };
   })
 
@@ -82,6 +83,15 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
     function($scope, $log, ModalService, names, login) {
     $scope.names = names.names;
     $log.log(names);
+    $log.log(login)
+
+    // get user login info and authenticate using login service
+    $scope.auth = function(user, pw){
+      if (!login.logIn(user, pw)) {
+        alert("Your username or password were incorrect. Try again.");
+      }
+
+    }
 
     $scope.getAuth = function(){
       // show login modal
@@ -91,17 +101,9 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
             scope: $scope,
         }).then(function(modal) {
             modal.element.modal();
-            // get user login info and authenticate using login service
-            // $scope.auth = function(){
-            //   response = login.login(user, pw);
-            //   if (login.login(user, pw)) {
-            //     modal.close.then(function() {
-            //     });
-            //   }
-            //   else { 
-            //     alert("Your username or password were incorrect. Try again.");
-            //   }
-            // }
+            modal.close.then(function(user, pw) {
+                $scope.auth(user, pw);
+            });
         });
     }
 

@@ -4,9 +4,9 @@
       <div class="modal-body">
         <h1>Log In</h1>
         <form class="form-group">
-          Username: <input type="text" class="form-control" ng-init="user"></input>
-          Password: <input type="password" class="form-control" ng-init="pw"></input>
-          <button type="button" ng-click="auth">Submit</button>
+          Username: <input type="text" class="form-control" ng-model="user"></input>
+          Password: <input type="password" class="form-control" ng-model="pw"></input>
+          <button type="button" ng-click="close(user, pw)">Submit</button>
         </form>
       </div>
     </div>
