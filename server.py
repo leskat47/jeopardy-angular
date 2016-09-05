@@ -1,4 +1,4 @@
-from flask import Flask, send_file, jsonify
+from flask import Flask, send_file, jsonify, request
 from model import db, connect_to_db, Game, Category, Question
 import os
 import pprint
@@ -9,9 +9,22 @@ app.secret_key = os.environ['FLASK_KEY']
 
 pp = pprint.PrettyPrinter()
 
+
 @app.route("/")
 def home():
     return send_file("templates/index.html")
+
+
+@app.route("/login", methods=["POST"])
+def login():
+
+    print request.form
+    
+    user = request.form.get("user")
+    pw = request.form.get("pw")
+
+    print user, pw
+    return jsonify(False)
 
 
 @app.route("/gamenames.json")
