@@ -1,4 +1,4 @@
-var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
+var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookies'])
 
   .factory('nameService', function($http){
     return {
@@ -80,10 +80,12 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
       }
     ])
 
-  .controller('homeCtrl', ['$scope', '$log', '$location', 'ModalService', 'names', 'login',
-    function($scope, $log, $location, ModalService, names, login) {
+  .controller('homeCtrl', ['$scope', '$log', '$location', '$cookies', 'ModalService', 'names', 'login',
+    function($scope, $log, $location, $cookies, ModalService, names, login) {
     $scope.names = names.names;
-
+    $cookies.put("test", "value");
+    $log.log($cookies.get("test"));
+    
     // get user login info and authenticate using login service
     $scope.auth = function(user, pw){
       $log.log("response: " + login.logIn(user, pw))
