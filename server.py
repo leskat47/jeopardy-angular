@@ -1,5 +1,5 @@
 from flask import Flask, send_file, jsonify, request
-from model import db, connect_to_db, Game, Category, Question
+from model import db, connect_to_db, User, Game, Category, Question
 import os
 import pprint
 
@@ -18,12 +18,19 @@ def home():
 @app.route("/login", methods=["POST"])
 def login():
 
-    print request.form
-    
-    user = request.form.get("user")
-    pw = request.form.get("pw")
+    # print request.form["user"]
 
-    print user, pw
+    # user = request.form.get("user")
+    # pw = request.form.get("pw")
+
+    post = request.get_json()
+    user = post.get('user')
+    pw = post.get('pw')
+    print pw
+
+    if User.query.filter(User.username==user).first():
+        return jsonify(True)
+
     return jsonify(False)
 
 

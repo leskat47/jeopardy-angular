@@ -23,12 +23,11 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
   .service('login', function($http) {
     this.logIn = function(user, pw){
         // TODO: create a service that checks log in
-        console.log("user :" + user);
         data = {"user": user, "pw": pw}
-        $http.post("login", data).then(function(response){
-          // console.log(response.data); 
-          return response.data;          
+        return $http.post("login", JSON.stringify(data)).then(function(response){
+          return response.data;
         })
+
     };
   })
 
@@ -87,14 +86,15 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute'])
 
     // get user login info and authenticate using login service
     $scope.auth = function(user, pw){
-      // debugger;
+      $log.log("response: " + login.logIn(user, pw))
       if (!login.logIn(user, pw)) {
         alert("Your username or password were incorrect. Try again.");
         return;
       }
       else {
         // TODO: Change to user's page
-        $location.path('/');
+        alert("You're logged in")
+        // FIXME: $location.path('/');
         return;
       }
     }
