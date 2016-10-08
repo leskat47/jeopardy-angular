@@ -20,24 +20,38 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
     };
   })
 
+  // .service('login', function($http) {
+  //   this.logIn = function(user, pw){
+  //       data = {"user": user, "pw": pw}
+  //       return $http.post("login", JSON.stringify(data)).then(function(response){
+  //         return response.data;
+  //       })
+
+  //   };
+  // })
+
   .service('login', function($http) {
-    this.logIn = function(user, pw){
-        // TODO: create a service that checks log in
-        data = {"user": user, "pw": pw}
-        return $http.post("login", JSON.stringify(data)).then(function(response){
-          return response.data;
-        })
+    var logIn = function(callbackFn, usr, pw) {
+        data = {"user": usr, "pw": pw}
+        $http.post("login", JSON.stringify(data)).success(function(response){
+            console.log("response data " + response);
 
+            callbackFn(response);
+        });
     };
+
+    return {
+        logIn: logIn
+    }
   })
 
-  .service('loginStatus', function($http) {
-    this.checkLogin = function(){
-        // server request to see if user is in session
-        // should this be a cookie??
-        return true;
-    };
-  })
+  // .service('logInStatus', function($http) {
+  //   this.checkLogin = function(){
+  //       // server request to see if user is in session
+  //       // should this be a cookie??
+  //       return true;
+  //   };
+  // })
 
   .config(['$routeProvider',
     function($routeProvider) {
@@ -87,19 +101,26 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
     $log.log($cookies.get("test"));
     
     // get user login info and authenticate using login service
+    // $scope.auth = function(user, pw){
+    //   $log.log("response: " + login.logIn(user, pw))
+    //   if (!login.logIn(user, pw)) {
+    //     alert("Your username or password were incorrect. Try again.");
+    //     return;
+    //   }
+    //   else {
+    //     // TODO: Change to user's page
+    //     alert("You're logged in")
+    //     // FIXME: $location.path('/');
+    //     return;
+    //   }
+    // }
+
     $scope.auth = function(user, pw){
-      $log.log("response: " + login.logIn(user, pw))
-      if (!login.logIn(user, pw)) {
-        alert("Your username or password were incorrect. Try again.");
-        return;
-      }
-      else {
-        // TODO: Change to user's page
-        alert("You're logged in")
-        // FIXME: $location.path('/');
-        return;
-      }
-    }
+        login.logIn(function(logInStatus){
+            $cookies.put("loggedIn", logInStatus);
+        }, user, pw);
+        // $log.log($cookies.get("status"));
+    };
 
     $scope.getAuth = function(){
       // show login modal
@@ -109,8 +130,8 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
             scope: $scope,
         }).then(function(modal) {
             modal.element.modal();
-            modal.close.then(function(user, pw) {
-              $scope.auth(user, pw);
+            modal.close.then(function(data) {
+              $scope.auth(data.user, data.pw);
             });
         });
     }

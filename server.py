@@ -24,13 +24,14 @@ def login():
     # pw = request.form.get("pw")
 
     post = request.get_json()
+
     user = post.get('user')
     pw = post.get('pw')
-    print pw
 
     if User.query.filter(User.username==user).first():
+        print True
         return jsonify(True)
-
+    print False
     return jsonify(False)
 
 
