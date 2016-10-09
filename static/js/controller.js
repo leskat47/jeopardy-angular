@@ -25,8 +25,8 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
         data = {"user": usr, "pw": pw}
         $http.post("login", JSON.stringify(data)).success(function(response){
             console.log("response data " + response);
-
             confirmUser(response);
+            return response;
         });
     };
     return {
@@ -65,18 +65,18 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
     function($scope, $log, $location, $cookies, http, ModalService, names, login) {
     $scope.names = names.names;
     $scope.log = "Log In";
-    $cookies.put("loggedIn", false);
-    $log.log($cookies.get("loggedIn"));
 
     $scope.auth = function(user, pw){
         login.logIn(function(logInStatus){
+            console.log(logInStatus)
+          if (logInStatus === true) {
             $cookies.put("loggedIn", logInStatus);
+            $scope.log = "Log Out";  
+          } else {
+            alert("Your username or password were incorrect. Try again.");
+          }
         }, user, pw);
-        if (login === "true") {
-         $scope.log = "Log Out";  
-        } else {
-          alert("Your username or password were incorrect. Try again.");
-        }
+
     };
 
     logout = function($http){
@@ -85,7 +85,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
     }
 
     $scope.getAuth = function(){
-      if ($cookies.get("loggedIn") === "false") {
+      if ($cookies.get("loggedIn") !== "true") {
 
       // show login modal
         ModalService.showModal({
