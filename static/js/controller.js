@@ -20,16 +20,6 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
     };
   })
 
-  // .service('login', function($http) {
-  //   this.logIn = function(user, pw){
-  //       data = {"user": user, "pw": pw}
-  //       return $http.post("login", JSON.stringify(data)).then(function(response){
-  //         return response.data;
-  //       })
-
-  //   };
-  // })
-
   .service('login', function($http) {
     var logIn = function(confirmUser, usr, pw) {
         data = {"user": usr, "pw": pw}
@@ -39,20 +29,10 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
             confirmUser(response);
         });
     };
-
     return {
         logIn: logIn
     }
   })
-
-
-  // .service('logInStatus', function($http) {
-  //   this.checkLogin = function(){
-  //       // server request to see if user is in session
-  //       // should this be a cookie??
-  //       return true;
-  //   };
-  // })
 
   .config(['$routeProvider',
     function($routeProvider) {
@@ -127,7 +107,6 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
         } else {
           alert("Your username or password were incorrect. Try again.");
         }
-
     };
 
     logout = function($http){
@@ -136,7 +115,6 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
     }
 
     $scope.getAuth = function(){
-      console.log($cookies.get("loggedIn")) 
       if ($cookies.get("loggedIn") === "false") {
 
       // show login modal
@@ -154,7 +132,6 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
         logout();
       }
     }
-
   }])
 
   .controller('gameCtrl', ['$scope', '$log', 'ModalService', 'currentGame',
