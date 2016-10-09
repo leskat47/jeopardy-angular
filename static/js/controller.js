@@ -31,12 +31,12 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
   // })
 
   .service('login', function($http) {
-    var logIn = function(callbackFn, usr, pw) {
+    var logIn = function(confirmUser, usr, pw) {
         data = {"user": usr, "pw": pw}
         $http.post("login", JSON.stringify(data)).success(function(response){
             console.log("response data " + response);
 
-            callbackFn(response);
+            confirmUser(response);
         });
     };
 
@@ -44,6 +44,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
         logIn: logIn
     }
   })
+
 
   // .service('logInStatus', function($http) {
   //   this.checkLogin = function(){
@@ -55,50 +56,52 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
 
   .config(['$routeProvider',
     function($routeProvider) {
-         $routeProvider.
-             when('/', {
-              templateUrl: '/static/partials/home.html',
-              controller: 'homeCtrl',
-              resolve: {
-                names: function(nameService){
-                  return nameService.getNames();
-                }
+       $routeProvider.
+           when('/', {
+            templateUrl: '/static/partials/home.html',
+            controller: 'homeCtrl',
+            resolve: {
+              names: function(nameService){
+                return nameService.getNames();
               }
-            }).
-             when('/play/:id', {
-              templateUrl: '/static/partials/play.html',
-              controller: 'gameCtrl',
-              resolve: {
-                currentGame: function(gameService, $route){
-                  return gameService.getGame($route.current.params.id);
-                }
+            }
+          }).
+           when('/play/:id', {
+            templateUrl: '/static/partials/play.html',
+            controller: 'gameCtrl',
+            resolve: {
+              currentGame: function(gameService, $route){
+                return gameService.getGame($route.current.params.id);
               }
-            }).
-            // Let's use a modal instead
-            // when('/login', {
-            //   templateUrl: '/static/partials/login.html',
-            //   controller: 'loginCtrl',
-            //   resolve: {
-            //     check: ["loginStatus", '$location', function (loginStatus, $location) {
-            //         status = loginStatus.checkLogin();
-            //             if (status) {
-            //               alert("You are already logged in.");
-            //               $location.path('/'); //redirect user to home.
-            //             }
-            //     }]
-            //   }
-            // }).
-            otherwise({
-              redirectTo: '/'
-            });
+            }
+          }).
+          // Let's use a modal instead
+          // when('/login', {
+          //   templateUrl: '/static/partials/login.html',
+          //   controller: 'loginCtrl',
+          //   resolve: {
+          //     check: ["loginStatus", '$location', function (loginStatus, $location) {
+          //         status = loginStatus.checkLogin();
+          //             if (status) {
+          //               alert("You are already logged in.");
+          //               $location.path('/'); //redirect user to home.
+          //             }
+          //     }]
+          //   }
+          // }).
+          otherwise({
+            redirectTo: '/'
+          });
       }
     ])
 
-  .controller('homeCtrl', ['$scope', '$log', '$location', '$cookies', 'ModalService', 'names', 'login',
-    function($scope, $log, $location, $cookies, ModalService, names, login) {
+  .controller('homeCtrl', ['$scope', '$log', '$location', '$cookies', '$http', 'ModalService', 'names', 'login',
+    function($scope, $log, $location, $cookies, http, ModalService, names, login) {
     $scope.names = names.names;
-    $cookies.put("test", "value");
-    $log.log($cookies.get("test"));
+    $scope.log = "Log In";
+    $cookies.put("loggedIn", false);
+    $log.log($cookies.get("loggedIn"));
+
     
     // get user login info and authenticate using login service
     // $scope.auth = function(user, pw){
@@ -119,12 +122,25 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
         login.logIn(function(logInStatus){
             $cookies.put("loggedIn", logInStatus);
         }, user, pw);
-        // $log.log($cookies.get("status"));
+        if (login === "true") {
+         $scope.log = "Log Out";  
+        } else {
+          alert("Your username or password were incorrect. Try again.");
+        }
+
     };
 
+    logout = function($http){
+        $cookies.put("loggedIn", false);
+        $scope.log = "Log In";
+    }
+
     $scope.getAuth = function(){
+      console.log($cookies.get("loggedIn")) 
+      if ($cookies.get("loggedIn") === "false") {
+
       // show login modal
-      ModalService.showModal({
+        ModalService.showModal({
             templateUrl: 'static/partials/loginform.html',
             controller: "ModalController",
             scope: $scope,
@@ -134,6 +150,9 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
               $scope.auth(data.user, data.pw);
             });
         });
+      } else {
+        logout();
+      }
     }
 
   }])
