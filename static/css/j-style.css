@@ -19,11 +19,30 @@ body {
     background-image: url("../img/jeopardybg.jpg");
 }
 
+
 .start-end {
     height: 600px;
     width: 1250px;
 }
 
+a:link {
+    color: white;
+}
+
+a:visited {
+    color: white;
+}
+
+.navbar {
+    background-color: lightgrey;
+    font-family: 'korinna';
+}
+
+.games {
+    font-family: 'gyparody', sans-serif;
+    font-size: 18pt;
+}
+/* title on game board */
 .title {
     color: white;
     font-family: 'gyparody', sans-serif;
@@ -48,6 +67,7 @@ body {
 .questions {
     background: #ca1919;
 }
+
 .screen {
     background: #F92727; /* For browsers that do not support gradients */
     background-image: 

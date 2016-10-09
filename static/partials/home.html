@@ -4,18 +4,18 @@
       <span ng-show="log === 'Log In'">
           <input type="text" ng-model="user"></input>
           <input type="password" ng-model="pw"></input>
-          <button type="button" ng-click="auth(user, pw)">{{ log }}</button>
+          <button type="button" class="btn btn-default" ng-click="auth(user, pw)">{{ log }}</button>
       </span>
 
       <span ng-show="log === 'Log Out'">
-          <button type="button" ng-click="logout()">{{ log }}</button>
+          <button type="button" class="btn btn-default" ng-click="logout()">{{ log }}</button>
       </span>
     </form>
   </div>
 </nav>
 
 <div class="container">
-    <div class="row" ng-repeat="(id, name) in names">
+    <div class="row games" ng-repeat="(id, name) in names">
         <a href="#/play/{{id}}">{{name}}</play>
     </div>
 </div>
