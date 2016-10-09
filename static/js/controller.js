@@ -22,7 +22,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
 
   .service('login', function($http) {
     var logIn = function(confirmUser, usr, pw) {
-        data = {"user": usr, "pw": pw}
+        data = {"user": usr, "pw": pw};
         $http.post("login", JSON.stringify(data)).success(function(response){
             console.log("response data " + response);
             confirmUser(response);
@@ -64,7 +64,11 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
   .controller('homeCtrl', ['$scope', '$log', '$location', '$cookies', '$http', 'ModalService', 'names', 'login',
     function($scope, $log, $location, $cookies, http, ModalService, names, login) {
     $scope.names = names.names;
-    $scope.log = "Log In";
+    if ($cookies.get("loggedIn") === "true") {
+      $scope.log = "Log Out";
+    } else {
+      $scope.log = "Log In";
+    }
 
     $scope.auth = function(user, pw){
         login.logIn(function(logInStatus){
@@ -79,29 +83,14 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
 
     };
 
-    logout = function($http){
-        $cookies.put("loggedIn", false);
+    $scope.logout = function($http){
+        console.log("logged out")
+        $cookies.remove("loggedIn");
+        $scope.user = "";
+        $scope.pw = "";
         $scope.log = "Log In";
     }
 
-    $scope.getAuth = function(){
-      if ($cookies.get("loggedIn") !== "true") {
-
-      // show login modal
-        ModalService.showModal({
-            templateUrl: 'static/partials/loginform.html',
-            controller: "ModalController",
-            scope: $scope,
-        }).then(function(modal) {
-            modal.element.modal();
-            modal.close.then(function(data) {
-              $scope.auth(data.user, data.pw);
-            });
-        });
-      } else {
-        logout();
-      }
-    }
   }])
 
   .controller('gameCtrl', ['$scope', '$log', 'ModalService', 'currentGame',

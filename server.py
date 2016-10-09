@@ -28,7 +28,9 @@ def login():
     user = post.get('user')
     pw = post.get('pw')
 
-    if User.query.filter(User.username==user).first():
+    user_in_db = User.query.filter(User.username==user).first()
+
+    if user_in_db and user_in_db.password == pw:
         print True
         return jsonify(True)
     print False

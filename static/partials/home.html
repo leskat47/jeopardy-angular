@@ -1,4 +1,18 @@
-<button type="button" ng-click="getAuth()">{{log}}</button>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <form class="navbar-form navbar-right">
+      <span ng-show="log === 'Log In'">
+          <input type="text" ng-model="user"></input>
+          <input type="password" ng-model="pw"></input>
+          <button type="button" ng-click="auth(user, pw)">{{ log }}</button>
+      </span>
+
+      <span ng-show="log === 'Log Out'">
+          <button type="button" ng-click="logout()">{{ log }}</button>
+      </span>
+    </form>
+  </div>
+</nav>
 
 <div class="container">
     <div class="row" ng-repeat="(id, name) in names">
