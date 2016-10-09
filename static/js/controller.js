@@ -55,20 +55,6 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
               }
             }
           }).
-          // Let's use a modal instead
-          // when('/login', {
-          //   templateUrl: '/static/partials/login.html',
-          //   controller: 'loginCtrl',
-          //   resolve: {
-          //     check: ["loginStatus", '$location', function (loginStatus, $location) {
-          //         status = loginStatus.checkLogin();
-          //             if (status) {
-          //               alert("You are already logged in.");
-          //               $location.path('/'); //redirect user to home.
-          //             }
-          //     }]
-          //   }
-          // }).
           otherwise({
             redirectTo: '/'
           });
@@ -81,22 +67,6 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
     $scope.log = "Log In";
     $cookies.put("loggedIn", false);
     $log.log($cookies.get("loggedIn"));
-
-    
-    // get user login info and authenticate using login service
-    // $scope.auth = function(user, pw){
-    //   $log.log("response: " + login.logIn(user, pw))
-    //   if (!login.logIn(user, pw)) {
-    //     alert("Your username or password were incorrect. Try again.");
-    //     return;
-    //   }
-    //   else {
-    //     // TODO: Change to user's page
-    //     alert("You're logged in")
-    //     // FIXME: $location.path('/');
-    //     return;
-    //   }
-    // }
 
     $scope.auth = function(user, pw){
         login.logIn(function(logInStatus){
