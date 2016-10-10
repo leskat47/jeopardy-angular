@@ -2,8 +2,8 @@
   <div class="container-fluid">
     <form class="navbar-form navbar-right">
       <span ng-show="log === 'Log In'">
-          <input type="text" ng-model="user"></input>
-          <input type="password" ng-model="pw"></input>
+          <input type="text" class="form-control" ng-model="user"></input>
+          <input type="password" class="form-control" ng-model="pw"></input>
           <button type="button" class="btn btn-default" ng-click="auth(user, pw)">{{ log }}</button>
       </span>
 
@@ -13,7 +13,8 @@
     </form>
   </div>
 </nav>
-
+<h1 class="title">Jeopardy</h1>
+<hr style="border-color: red">
 <div class="container">
     <div class="row games" ng-repeat="(id, name) in names">
         <a href="#/play/{{id}}">{{name}}</play>
