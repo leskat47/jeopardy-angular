@@ -75,7 +75,8 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
             console.log(logInStatus)
           if (logInStatus === true) {
             $cookies.put("loggedIn", logInStatus);
-            $scope.log = "Log Out";  
+            $scope.log = "Log Out"; 
+            $scope.names = names.names;
           } else {
             alert("Your username or password were incorrect. Try again.");
           }
@@ -89,6 +90,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
         $scope.user = "";
         $scope.pw = "";
         $scope.log = "Log In";
+        $scope.names = names.names;
     }
 
   }])
