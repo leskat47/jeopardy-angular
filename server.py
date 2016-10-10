@@ -1,4 +1,4 @@
-from flask import Flask, send_file, jsonify, request
+from flask import Flask, send_file, jsonify, request, session
 from model import db, connect_to_db, User, Game, Category, Question
 import os
 import pprint
@@ -32,6 +32,7 @@ def login():
 
     if user_in_db and user_in_db.password == pw:
         print True
+        session["user_id"] = user_in_db.user_id
         return jsonify(True)
     print False
     return jsonify(False)
@@ -40,7 +41,12 @@ def login():
 @app.route("/gamenames.json")
 def game_names():
 
-    games = Game.query.all()
+
+    if "user_id" in session:
+        games = Game.query.filter_by(public=True).filter_by(owner_id=session["user_id"]).all()
+    else:
+        games = Game.query.filter_by(public=True).all()
+
     names = {game.game_id: game.name for game in games}
 
     return jsonify(names=names)
