@@ -25,6 +25,7 @@ class Game(db.Model):
     name = db.Column(db.String(20), nullable=False)
     final_question = db.Column(db.Text, nullable=False)
     final_answer = db.Column(db.Text, nullable=False)
+    public = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
         return "<game: %s, owner: %s>" % (self.game_id, self.owner_id)
@@ -133,8 +134,9 @@ def seed_data():
                                 }}
     final_question = "A style guide for python, its acronym is PEP"
     final_answer = "What are Python Enhancement Proposals?"
-
-    game = Game(owner_id=user.user_id, name=game_data["name"], final_question=final_question, final_answer=final_answer)
+    public = True
+    
+    game = Game(owner_id=user.user_id, name=game_data["name"], final_question=final_question, final_answer=final_answer, public=public)
     db.session.add(game)
     db.session.commit()
     for category, questions in game_data["categories"].items():
