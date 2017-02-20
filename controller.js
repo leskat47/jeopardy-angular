@@ -32,11 +32,11 @@ app.controller('gameCtrl', ['$scope', '$log', 'ModalService', function($scope, $
 												},
 								'TV': {
 												'100':
-                                                    {'A weekly television series on NBC was the first to air completely in color in 1959': 'What is the show Bonanza?'},
+                                                    {'This weekly television series on NBC was the first to air completely in color in 1959': 'What is the show Bonanza?'},
                                                 '200':
                                                     {'The family name of the main characters in the Cosby Show which ran from 1984-1992' : 'What is The Huxtable Family?'},
                                                 '300':
-                                                    {'A popular children show that debuted on PBS in 1969' : 'What is Sesame Street?'},
+                                                    {'This popular children show that debuted on PBS in 1969' : 'What is Sesame Street?'},
                                                 '400':
                                                     {'The breakout star who played Stella Carlin on the third season of Orange Is the New Black' : 'Who is Ruby Rose?'},
                                                 '500':
@@ -57,39 +57,39 @@ app.controller('gameCtrl', ['$scope', '$log', 'ModalService', function($scope, $
 								
                                 'Python': {
                                                 '100':
-                                                    {'The hardest part of programming': 'What is naming variables?'},
+                                                    {'The creator of Python': 'Who is Guido Van Rossum?'},
                                                 '200':
-                                                    {'A one-line summary for fucntions' : 'What is Docstrings?'},
+                                                    {'A one-line summary for functions' : 'What are Docstrings?'},
                                                 '300':
                                                     {'The data structure that range() returns' : 'What is list?'},
                                                 '400':
-                                                    {'The list of things defined for a function to receive' : 'What are parameters?'},
+                                                    {'The arguments that a function receives' : 'What are parameters?'},
                                                 '500':
-                                                    {'The Zen of Python poem prints out using this command' : 'What is "import this"?'},
+                                                    {'The Zen of Python prints out using this command' : 'What is "import this"?'},
                                                 },
                                 'Ada or Grace': {
                                                 '100':
-                                                    {'She is the first computer programmer in history': 'Who is Ada?'},
+                                                    {'She is the first computer programmer in history.': 'Who is Ada?'},
                                                 '200':
-                                                    {'She retired from the navy at the standard age of 60, but was repeatedly recalled until her eighties' : 'Who is Grace?'},
+                                                    {'She retired from the navy at the standard age of 60, but was repeatedly recalled until her eighties.' : 'Who is Grace?'},
                                                 '300':
                                                     {'Her most famous quotes, which is often attributed to others, is: "It\'s easier to ask forgiveness than it is to get permission."' : 'Who is Grace?'},
                                                 '400':
                                                     {'She was described as "The most coarse and vulgar woman in England. . ."' : 'Who is Ada?'},
                                                 '500':
-                                                    {'When she was younger she believed she could fly, and wrote illustrated a guide called Flyology' : 'Who is Ada?'},
+                                                    {'When she was younger she believed she could fly, and wrote illustrated a guide called Flyology.' : 'Who is Ada?'},
                                                 },
                                 'Staff' : {
                                                 '100':
-                                                    {'Used to live in a communal, falling-down 28-room mansion in baltimore': 'Who is Joel?'},
+                                                    {'Used to live in a communal, falling-down 28-room mansion in Baltimore.': 'Who is Joel?'},
                                                 '200':
-                                                    {'Carried Stephen Hawking\'s wheelchair with him in it' : 'Who is Henry?'},
+                                                    {'Carried Stephen Hawking\'s wheelchair with him in it.' : 'Who is Henry?'},
                                                 '300':
-                                                    {'Has a betta fish - and talks to it A LOT' : 'Who is Meggie?'},
+                                                    {'Has a beta fish - and talks to it A LOT.' : 'Who is Meggie?'},
                                                 '400':
-                                                    {'This persons great-great-great uncle was president of Mexico' : 'Who is Leslie?'},
+                                                    {'This persons great-great-great uncle was president of Mexico.' : 'Who is Leslie?'},
                                                 '500':
-                                                    {'Bungy jumped off the 3rd largest bungy jump distance in the world' : 'Who is Ally?'},
+                                                    {'This person has driven a tractor and herded cows on a four-wheeler.' : 'Who is Jennifer?'},
                                                 },
                                 }
                     };
