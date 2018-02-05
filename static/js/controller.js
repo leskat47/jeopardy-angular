@@ -55,6 +55,10 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
               }
             }
           }).
+           when('/newgame', {
+             templateUrl: '/static/partials/newgame.html',
+             controller: 'NewGameCtrl',
+           }).
           otherwise({
             redirectTo: '/'
           });
@@ -64,6 +68,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
   .controller('homeCtrl', ['$scope', '$log', '$location', '$cookies', '$http', 'ModalService', 'names', 'login',
     function($scope, $log, $location, $cookies, http, ModalService, names, login) {
     $scope.names = names.names;
+    // display for log in/out button
     if ($cookies.get("loggedIn") === "true") {
       $scope.log = "Log Out";
     } else {
@@ -72,10 +77,10 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
 
     $scope.auth = function(user, pw){
         login.logIn(function(logInStatus){
-            console.log(logInStatus)
+            console.log(logInStatus);
           if (logInStatus === true) {
             $cookies.put("loggedIn", logInStatus);
-            $scope.log = "Log Out"; 
+            $scope.log = "Log Out";
             $scope.names = names.names;
           } else {
             alert("Your username or password were incorrect. Try again.");
@@ -85,7 +90,7 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
     };
 
     $scope.logout = function($http){
-        console.log("logged out")
+        console.log("logged out");
         $cookies.remove("loggedIn");
         $scope.user = "";
         $scope.pw = "";
@@ -97,173 +102,198 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
 
   .controller('gameCtrl', ['$scope', '$log', 'ModalService', 'currentGame',
     function($scope, $log, ModalService, currentGame) {
-    $scope.$log = $log;
+      $scope.$log = $log;
 
-    // Initial variables
-    $scope.title = 'Jeopardy!';
-    $scope.player1 = {'name': 'Player 1', 'score': 0, 'bet': 0};
-    $scope.player2 = {'name': 'Player 2', 'score': 0, 'bet': 0};
-    $scope.round = currentGame["categories"];
-    $scope.finaljeopardy = {
-        'question': currentGame.finalQ,
-        'answer': currentGame.finalA
-    };
+      // Initial variables
+      $scope.title = 'Jeopardy!';
+      $scope.player1 = {'name': 'Player 1', 'score': 0, 'bet': 0};
+      $scope.player2 = {'name': 'Player 2', 'score': 0, 'bet': 0};
+      $scope.round = currentGame["categories"];
+      $scope.finaljeopardy = {
+          'question': currentGame.finalQ,
+          'answer': currentGame.finalA
+      };
 
-    // Control display of final jeopardy 
-    $scope.questionsDone = 0;
-    $scope.FinalJeopardy = false;
-    $scope.winner = '';
-    $scope.$watch("FinalJeopardy", function() {
-      if ($scope.FinalJeopardy === true) {
-        $scope.showBetting();
-      }
-    });
+      // Control display of final jeopardy
+      $scope.questionsDone = 29;
+      $scope.FinalJeopardy = false;
+      $scope.winner = '';
+      $scope.$watch("FinalJeopardy", function() {
+        if ($scope.FinalJeopardy === true) {
+          $scope.showBetting();
+        }
+      });
 
-    // Control display of dollar screens
-    $scope.showOption = true;
+      // Control display of dollar screens
+      $scope.showOption = true;
 
-    // Splash screen on page load
-    $scope.init = function(){
-        ModalService.showModal({
-            templateUrl: 'static/partials/splash.html',
-            controller: 'ModalController',
-            scope: $scope,
-        }).then(function(modal) {
-            modal.element.modal();
-            modal.close.then(function(result) {
-            });
-        });
-    };
+      // Splash screen on page load
+      $scope.init = function(){
+          ModalService.showModal({
+              templateUrl: 'static/partials/splash.html',
+              controller: 'ModalController',
+              scope: $scope,
+          }).then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(result) {
+              });
+          });
+      };
 
-    $scope.loss = function(player, dollars) {
-        player.score -= Number(dollars);
-        $log.log(player.name + " " + player.score);
-    };
+      $scope.loss = function(player, dollars) {
+          player.score -= Number(dollars);
+          $log.log(player.name + " " + player.score);
+      };
 
-    $scope.finalloss = function(player) {
-        player.score -= Number(player.bet);
-        $log.log(player.name + " " + player.score);
-    };
+      $scope.finalloss = function(player) {
+          player.score -= Number(player.bet);
+          $log.log(player.name + " " + player.score);
+      };
 
-    $scope.finalright = function(player) {
-        player.score += Number(player.bet);
-        $log.log(player.name + " " + player.score);
-    };
+      $scope.finalright = function(player) {
+          player.score += Number(player.bet);
+          $log.log(player.name + " " + player.score);
+      };
 
-    $scope.bet = function(player1bet, player2bet) {
-        $scope.player1.bet = Number(player1bet);
-        $scope.player2.bet = Number(player2bet);
-        $log.log($scope.player1);
-        $log.log($scope.player2);
-    };
+      $scope.bet = function(player1bet, player2bet) {
+          $scope.player1.bet = Number(player1bet);
+          $scope.player2.bet = Number(player2bet);
+          $log.log($scope.player1);
+          $log.log($scope.player2);
+      };
 
 
 
-  // MODAL WINDOWS /////////////////////////////////////////
+    // MODAL WINDOWS /////////////////////////////////////////
 
-	$scope.showQ = function(QandA, dollars) {
-        $scope.questionsDone++;
-        ModalService.showModal({
-            templateUrl: 'static/partials/question.html',
-            controller: "ModalController",
-            scope: $scope,
-        }).then(function(modal) {
-            modal.element.modal();
-            $scope.currentQ = Object.keys(QandA)[0];
-            $scope.currentA = QandA[$scope.currentQ];
-            $scope.dollars = dollars;
-            // Disable buttons after selected
-            $scope.wrong1 = false;
-            $scope.wrong2 = false;
+  	  $scope.showQ = function(QandA, dollars) {
+          $scope.questionsDone++;
+          ModalService.showModal({
+              templateUrl: 'static/partials/question.html',
+              controller: "ModalController",
+              scope: $scope,
+          }).then(function(modal) {
+              modal.element.modal();
+              $scope.currentQ = Object.keys(QandA)[0];
+              $scope.currentA = QandA[$scope.currentQ];
+              $scope.dollars = dollars;
+              // Disable buttons after selected
+              $scope.wrong1 = false;
+              $scope.wrong2 = false;
 
-            modal.close.then(function(player) {
-                player.score += Number(dollars);
-                $scope.showA();
-            });
-        });
-    };
+              modal.close.then(function(player) {
+                  player.score += Number(dollars);
+                  $scope.showA();
+              });
+          });
+      };
 
-    $scope.showA = function() {
-        ModalService.showModal({
-            templateUrl: 'static/partials/answer.html',
-            controller: "ModalController",
-            scope: $scope,
-        }).then(function(modal) {
-            modal.element.modal();
-            modal.close.then(function(result) {
-                $log.log($scope.questionsDone);
-                if ($scope.questionsDone === 30) {
-                    $scope.FinalJeopardy = true;
-                }
-            });
-        });
-    };
+      $scope.showA = function() {
+          ModalService.showModal({
+              templateUrl: 'static/partials/answer.html',
+              controller: "ModalController",
+              scope: $scope,
+          }).then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(result) {
+                  $log.log($scope.questionsDone);
+                  if ($scope.questionsDone === 30) {
+                      $scope.FinalJeopardy = true;
+                  }
+              });
+          });
+      };
 
-    $scope.showBetting = function(){
-        ModalService.showModal({
-            templateUrl: 'static/partials/bettingfinal.html',
-            controller: 'ModalController',
-            scope: $scope,
-        }).then(function(modal) {
-            modal.element.modal();
-            modal.close.then(function(result) {
-                $log.log(result);
-                $scope.showFinal();
-            });
-        });
-    };
+      $scope.showBetting = function(){
+          ModalService.showModal({
+              templateUrl: 'static/partials/bettingfinal.html',
+              controller: 'ModalController',
+              scope: $scope,
+          }).then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(result) {
+                  $log.log(result);
+                  $scope.showFinal();
+              });
+          });
+      };
 
-    $scope.showFinal = function(){
-        ModalService.showModal({
-            templateUrl: 'static/partials/finaljeopardyQ.html',
-            controller: 'ModalController',
-            scope: $scope,
-        }).then(function(modal) {
-            modal.element.modal();
-            modal.close.then(function(result) {
-                $scope.showFinalA();
-            });
-        });
-    };
+      $scope.showFinal = function(){
+          ModalService.showModal({
+              templateUrl: 'static/partials/finaljeopardyQ.html',
+              controller: 'ModalController',
+              scope: $scope,
+          }).then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(result) {
+                  $scope.showFinalA();
+              });
+          });
+      };
 
-    $scope.showFinalA = function() {
-        ModalService.showModal({
-            templateUrl: 'static/partials/finalanswer.html',
-            controller: 'ModalController',
-            scope: $scope,
-        }).then(function(modal){
-            modal.element.modal();
-            modal.close.then(function(result) {
-                if ($scope.player1.score > $scope.player2.score){
-                    $scope.winner = "Player 1";
-                } else if ($scope.player1.score === $scope.player2.score){
-                    $scope.winner = "Tie";
-                }else {
-                    $scope.winner = "Player 2";
-                }
-                $scope.showWinner();
-            });
-        });
-    };
+      $scope.showFinalA = function() {
+          ModalService.showModal({
+              templateUrl: 'static/partials/finalanswer.html',
+              controller: 'ModalController',
+              scope: $scope,
+          }).then(function(modal){
+              modal.element.modal();
+              modal.close.then(function(result) {
+                  if ($scope.player1.score > $scope.player2.score){
+                      $scope.winner = "Player 1";
+                  } else if ($scope.player1.score === $scope.player2.score){
+                      $scope.winner = "Tie";
+                  }else {
+                      $scope.winner = "Player 2";
+                  }
+                  $scope.showWinner();
+              });
+          });
+      };
 
-    $scope.showWinner = function(){
-        ModalService.showModal({
-            templateUrl: 'static/partials/winner.html',
-            controller: 'ModalController',
-            scope: $scope,
-        }).then(function(modal) {
-            modal.element.modal();
-            modal.close.then(function(result) {
-            });
-        });
-    };
+      $scope.showWinner = function(){
+          ModalService.showModal({
+              templateUrl: 'static/partials/winner.html',
+              controller: 'ModalController',
+              scope: $scope,
+          }).then(function(modal) {
+              modal.element.modal();
+              modal.close.then(function(result) {
+              });
+          });
+      };
 
-	}])
+  	}])
 
   .controller('ModalController', function($scope, close) {
-  
+
    $scope.close = function(result) {
       close(result, 500); // close, but give 500ms for bootstrap to animate
    };
 
-});
+  })
+  .controller('NewGameCtrl', ['$scope', '$log', '$cookies', '$http', 'ModalService', 'login',
+    function($scope, $log, $cookies, http, ModalService, names, login) {
+      $scope.gameTitle = "";
+      $scope.categories = {};
+      for (var i=0; i < 6; i++) {
+        $scope.categories[i] = {};
+        for (var j = 100; j < 600; j +=100) {
+          $scope.categories[i][j] = "Add a question";
+        }
+      }
+      console.log($scope.categories)
+      $scope.getTitle = function(){
+        ModalService.showModal({
+          templateUrl: 'static/partials/newgamename.html',
+          controller: 'ModalController',
+          scope: $scope,
+        }).then(function(modal){
+          modal.element.modal();
+          modal.close.then(function(name){
+            $scope.gameTitle = name;
+          })
+        })
+      }
+    }
+  ]);

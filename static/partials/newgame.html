@@ -1,0 +1,41 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <form class="navbar-form navbar-right">
+      <span ng-show="log === 'Log In'">
+          <input type="text" class="form-control" ng-model="user" placeholder="user name"></input>
+          <input type="password" class="form-control" ng-model="pw" placeholder="password"></input>
+          <button type="button" class="btn btn-default" ng-click="auth(user, pw)">{{ log }}</button>
+      </span>
+
+      <span ng-show="log === 'Log Out'">
+          <button type="button" class="btn btn-default" ng-click="logout()">{{ log }}</button>
+      </span>
+    </form>
+  </div>
+</nav>
+<h1 class="title">Jeopardy</h1>
+<hr style="border-color: red">
+<div class="container" ng-init="getTitle()">
+    <h1 class="games" ng-model="gameTitle" placeholder="Name of Game">{{ gameTitle }}</h1>
+    <form class="form" method="post">
+      <div class="row header">
+        <category class="categories col-xs-2" ng-repeat="cat in categories">
+          <textarea class="form-control" name="{{cat}}" placeholder="enter a category"></textarea>
+        </category>
+      </div>
+      <div class="row questions">
+        <category ng-repeat="(cat, questionSet) in categories" class="col-xs-2">
+              <question ng-repeat="(dollars, QandA) in questionSet">
+                   <div class="row">
+                      <div class="col-xs-12">
+                          <div class="screen">
+                            <h3>{{ QandA }} for ${{ dollars }}</h3>
+                          </div>
+                      </div>
+                   </div>
+              </question>
+        </category>
+      </div>
+    </form>
+
+</div>

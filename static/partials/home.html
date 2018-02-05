@@ -2,8 +2,8 @@
   <div class="container-fluid">
     <form class="navbar-form navbar-right">
       <span ng-show="log === 'Log In'">
-          <input type="text" class="form-control" ng-model="user"></input>
-          <input type="password" class="form-control" ng-model="pw"></input>
+          <input type="text" class="form-control" ng-model="user" placeholder="user name"></input>
+          <input type="password" class="form-control" ng-model="pw" placeholder="password"></input>
           <button type="button" class="btn btn-default" ng-click="auth(user, pw)">{{ log }}</button>
       </span>
 
