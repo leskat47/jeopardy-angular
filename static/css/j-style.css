@@ -87,6 +87,9 @@ a:visited {
     font-weight: bold;
 }
 
+.question{
+  height: 225px;
+}
 .categories {
     background: white;
     border: solid silver 5px;

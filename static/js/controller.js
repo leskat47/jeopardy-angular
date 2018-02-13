@@ -271,29 +271,4 @@ var app = angular.module('gameApp', ['angularModalService', 'ngRoute', 'ngCookie
       close(result, 500); // close, but give 500ms for bootstrap to animate
    };
 
-  })
-  .controller('NewGameCtrl', ['$scope', '$log', '$cookies', '$http', 'ModalService', 'login',
-    function($scope, $log, $cookies, http, ModalService, names, login) {
-      $scope.gameTitle = "";
-      $scope.categories = {};
-      for (var i=0; i < 6; i++) {
-        $scope.categories[i] = {};
-        for (var j = 100; j < 600; j +=100) {
-          $scope.categories[i][j] = "Add a question";
-        }
-      }
-      console.log($scope.categories)
-      $scope.getTitle = function(){
-        ModalService.showModal({
-          templateUrl: 'static/partials/newgamename.html',
-          controller: 'ModalController',
-          scope: $scope,
-        }).then(function(modal){
-          modal.element.modal();
-          modal.close.then(function(name){
-            $scope.gameTitle = name;
-          })
-        })
-      }
-    }
-  ]);
+ });

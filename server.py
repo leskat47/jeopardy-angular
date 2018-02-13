@@ -1,5 +1,6 @@
 from flask import Flask, send_file, jsonify, request, session
 from model import db, connect_to_db, User, Game, Category, Question
+import bcrypt
 import os
 import pprint
 
@@ -18,23 +19,18 @@ def home():
 @app.route("/login", methods=["POST"])
 def login():
 
-    # print request.form["user"]
-
-    # user = request.form.get("user")
-    # pw = request.form.get("pw")
-
     post = request.get_json()
 
     user = post.get('user')
     pw = post.get('pw')
 
     user_in_db = User.query.filter(User.username==user).first()
-
+    # import pdb; pdb.set_trace()
     if user_in_db and user_in_db.password == pw:
-        print True
+        print "logged in"
         session["user_id"] = user_in_db.user_id
         return jsonify(True)
-    print False
+    print "not logged in"
     return jsonify(False)
 
 
@@ -48,6 +44,7 @@ def game_names():
         games = Game.query.filter_by(public=True).all()
 
     names = {game.game_id: game.name for game in games}
+    print names
 
     return jsonify(names=names)
 

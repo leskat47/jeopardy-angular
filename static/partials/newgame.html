@@ -16,9 +16,12 @@
 <h1 class="title">Jeopardy</h1>
 <hr style="border-color: red">
 <div class="container" ng-init="getTitle()">
-    <h1 class="games" ng-model="gameTitle" placeholder="Name of Game">{{ gameTitle }}</h1>
+  <h1 class="games" ng-model="gameTitle" placeholder="Name of Game">{{ gameTitle }}</h1>
+  <p>
+    <button type="button" class="btn .playerbtn" name="button" ng-click("addGame()")>Add this game</button>
+  </p>
+  <div class="row header">
     <form class="form" method="post">
-      <div class="row header">
         <category class="categories col-xs-2" ng-repeat="cat in categories">
           <textarea class="form-control" name="{{cat}}" placeholder="enter a category"></textarea>
         </category>
@@ -28,8 +31,8 @@
               <question ng-repeat="(dollars, QandA) in questionSet">
                    <div class="row">
                       <div class="col-xs-12">
-                          <div class="screen">
-                            <h3>{{ QandA }} for ${{ dollars }}</h3>
+                          <div class="screen" ng-click="addQuestion(cat, dollars)">
+                            <h3>{{ QandA }} worth ${{ dollars }}</h3>
                           </div>
                       </div>
                    </div>
@@ -38,4 +41,4 @@
       </div>
     </form>
 
-</div>
+  </div>
