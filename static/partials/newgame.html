@@ -17,13 +17,14 @@
 <hr style="border-color: red">
 <div class="container" ng-init="getTitle()">
   <h1 class="games" ng-model="gameTitle" placeholder="Name of Game">{{ gameTitle }}</h1>
+  {{ categories }}
   <p>
     <button type="button" class="btn .playerbtn" name="button" ng-click("addGame()")>Add this game</button>
   </p>
   <div class="row header">
     <form class="form" method="post">
-        <category class="categories col-xs-2" ng-repeat="cat in categories">
-          <textarea class="form-control" name="{{cat}}" placeholder="enter a category"></textarea>
+        <category class="categories col-xs-2" ng-repeat=" i in categories.length">
+          <textarea class="form-control" value="{{categories[i]}}" placeholder="enter a category"></textarea>
         </category>
       </div>
       <div class="row questions">
